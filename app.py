@@ -34,30 +34,32 @@ if "rate_limiter" not in st.session_state:
 
 # Sidebar
 with st.sidebar:
-    st.title("⚙️ Configuration")
+    st.title("Configuration")  # Removed emoji
     api_key = st.text_input("OpenAI API Key", type="password")
-    
+
     if api_key:
         if not validate_api_key(api_key):
-            st.error("⚠️ Invalid API key format")
+            st.error("Invalid API key format")
         else:
             os.environ["OPENAI_API_KEY"] = api_key
             logger.info("API key configured")
-    
+
     st.markdown("---")
-    st.markdown("### 📧 Get Expert Help")
-    st.markdown(f"""
+    st.markdown("### Get Expert Help")
+    st.markdown(
+        f"""
     **Join our WhatsApp Community**
     
-    📩 Email: {SUPPORT_EMAIL}
-    """)
-    
+    Email: {SUPPORT_EMAIL}
+    """
+    )
+
     st.markdown("---")
-    st.markdown("### 📊 Usage Stats")
+    st.markdown("### Usage Stats")
     rate_limiter = st.session_state.rate_limiter
     st.metric("Total Queries", rate_limiter.get_total())
     st.metric("Remaining", f"{rate_limiter.get_remaining()}/{RATE_LIMIT_REQUESTS}")
-    
+
     st.markdown("---")
     st.markdown(f"### About {PLATFORM_NAME}")
     st.markdown("""
@@ -160,17 +162,37 @@ if prompt := st.chat_input("Ask about GrabyAI, authentication, pricing..."):
 # Sidebar examples
 with st.sidebar:
     st.markdown("---")
-    st.markdown("### 💡 Example Questions")
-    
+    st.markdown("### Example Questions")
+
     examples = [
-        "How does GrabyAI work?",
+        "How does Graby AI work?",
         "How do I authenticate Margiela?",
         "Calculate profit: buy £200, sell £450",
         "What do Rick Owens jackets sell for?",
         "Tips for listing photos?",
     ]
-    
+
     for example in examples:
         if st.button(example, key=example, use_container_width=True):
+            # Add to messages
             st.session_state.messages.append({"role": "user", "content": example})
-            st.rerun()
+
+            # Trigger response immediately
+            with st.spinner("Thinking..."):
+                try:
+                    response_text = ""
+                    for event in st.session_state.agent.stream(
+                        {"messages": [{"role": "user", "content": example}]},
+                        stream_mode="values",
+                    ):
+                        last_message = event["messages"][-1]
+                        if hasattr(last_message, "content") and last_message.content:
+                            response_text = last_message.content
+
+                    st.session_state.messages.append(
+                        {"role": "assistant", "content": response_text}
+                    )
+                except Exception as e:
+                    logger.error(f"Error: {str(e)}")
+
+            st.rerun()  # This makes it show immediately

@@ -25,6 +25,6 @@ LOG_FILE = "grabyai_assistant.log"
 LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
 # Platform info
-PLATFORM_NAME = "GrabyAI"
-SUPPORT_EMAIL = "support@grabyai.com"
-WHATSAPP_GROUP_EMAIL = "support@grabyai.com"
+PLATFORM_NAME = "Graby AI"
+SUPPORT_EMAIL = "info@graby.ai"
+WHATSAPP_GROUP_EMAIL = "info@graby.ai"
