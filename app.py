@@ -79,7 +79,7 @@ st.markdown("Your guide to designer resale success")
 
 # Check API key
 if not api_key:
-    st.warning("⚠️ Please enter your OpenAI API key in the sidebar")
+    st.warning("Please enter your OpenAI API key in the sidebar")
     st.info("This is a demo for Turing College. In production, keys are managed server-side.")
     st.stop()
 
@@ -90,7 +90,7 @@ try:
             agent, vectorstore = initialize_agent(api_key)
             st.session_state.agent = agent
             st.session_state.vectorstore = vectorstore
-        st.success("✅ Assistant ready!")
+        st.success("Assistant is now ready.")
         logger.info("Agent initialized")
 except Exception as e:
     st.error(f"Error initializing assistant: {str(e)}")
@@ -104,7 +104,7 @@ for message in st.session_state.messages:
 
 # Chat input
 if prompt := st.chat_input("Ask about GrabyAI, authentication, pricing..."):
-    
+
     # Rate limiting
     if not st.session_state.rate_limiter.check_limit():
         st.error(f"""
@@ -115,21 +115,21 @@ if prompt := st.chat_input("Ask about GrabyAI, authentication, pricing..."):
         """)
         logger.warning("Rate limit exceeded")
         st.stop()
-    
+
     # Sanitize input
     prompt = sanitize_input(prompt)
-    
+
     if len(prompt) < 3:
         st.warning("Please enter a valid question (min 3 characters)")
         st.stop()
-    
+
     logger.info(f"User query: {prompt[:100]}...")
-    
+
     # Add user message
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
-    
+
     # Get response
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
@@ -142,16 +142,16 @@ if prompt := st.chat_input("Ask about GrabyAI, authentication, pricing..."):
                     last_message = event["messages"][-1]
                     if hasattr(last_message, 'content') and last_message.content:
                         response_text = last_message.content
-                
+
                 logger.info("Response generated successfully")
                 st.markdown(response_text)
                 st.session_state.messages.append({
                     "role": "assistant", 
                     "content": response_text
                 })
-                
+
             except Exception as e:
-                error_msg = "⚠️ Error processing request. Please try again."
+                error_msg = "Error processing request. Please try again."
                 logger.error(f"Response error: {str(e)}")
                 st.error(error_msg)
                 st.session_state.messages.append({
