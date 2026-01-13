@@ -72,7 +72,7 @@ with st.sidebar:
     """)
 
 # Main content
-st.title(f"🤖 {PLATFORM_NAME} Platform Assistant")
+st.title(f"𖣐 {PLATFORM_NAME} Platform Assistant")
 st.markdown("Your guide to designer resale success")
 
 # Check API key
