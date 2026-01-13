@@ -19,9 +19,7 @@ from agent.agent_setup import initialize_agent
 logger = setup_logger(__name__)
 
 st.set_page_config(
-    page_title=f"{PLATFORM_NAME} Assistant",
-    page_icon="🤖",
-    layout="wide"
+    page_title=f"{PLATFORM_NAME} Assistant", page_icon="𖣐", layout="wide"
 )
 
 # Initialize session state
